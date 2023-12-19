@@ -1,3 +1,5 @@
+import { TextControl } from "@wordpress/components";
+
 /**
  * Retrieves the translation of text.
  *
@@ -11,7 +13,7 @@ import { __ } from "@wordpress/i18n";
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps } from "@wordpress/block-editor";
+import { useBlockProps, InnerBlocks } from "@wordpress/block-editor";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -29,10 +31,16 @@ import "./editor.scss";
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit() {
+export default function Edit({ attributes, setAttributes }) {
 	return (
-		<p {...useBlockProps()}>
-			{__("Faq More Accordion – hello from the editor!", "faq-more-accordion")}
-		</p>
+		<div {...useBlockProps()}>
+			<TextControl
+				value={attributes.titol}
+				onChange={(val) => setAttributes({ titol: val })}
+			/>
+			<div>
+				<InnerBlocks />
+			</div>
+		</div>
 	);
 }

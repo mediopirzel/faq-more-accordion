@@ -1,3 +1,6 @@
-<p <?php echo get_block_wrapper_attributes(); ?>>
-	<?php esc_html_e( 'Faq More Accordion – hello from a dynamic block!', 'faq-more-accordion' ); ?>
-</p>
+<div <?php echo get_block_wrapper_attributes(); ?>>
+	<details>
+		<summary><?php echo $attributes['titol'] ?></summary>
+		<div><?php echo $content ?></div>
+	</details>
+</div>
