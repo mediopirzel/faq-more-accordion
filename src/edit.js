@@ -1,4 +1,4 @@
-import { TextControl } from "@wordpress/components";
+import { PanelBody, PanelRow } from "@wordpress/components";
 
 /**
  * Retrieves the translation of text.
@@ -13,7 +13,15 @@ import { __ } from "@wordpress/i18n";
  *
  * @see https://developer.wordpress.org/block-editor/reference-guides/packages/packages-block-editor/#useblockprops
  */
-import { useBlockProps, InnerBlocks } from "@wordpress/block-editor";
+import {
+	useBlockProps,
+	InspectorControls,
+	InnerBlocks,
+	RichText,
+	withColors,
+	__experimentalColorGradientSettingsDropdown as ColorGradientSettingsDropdown,
+	__experimentalUseMultipleOriginColorsAndGradients as useMultipleOriginColorsAndGradients,
+} from "@wordpress/block-editor";
 
 /**
  * Lets webpack process CSS, SASS or SCSS files referenced in JavaScript files.
@@ -31,16 +39,67 @@ import "./editor.scss";
  *
  * @return {WPElement} Element to render.
  */
-export default function Edit({ attributes, setAttributes }) {
-	return (
-		<div {...useBlockProps()}>
-			<TextControl
-				value={attributes.titol}
-				onChange={(val) => setAttributes({ titol: val })}
-			/>
-			<div>
-				<InnerBlocks />
-			</div>
-		</div>
+
+/**
+ * Extendre colors
+ * https://developer.wordpress.org/news/2023/11/01/how-to-add-custom-color-options-to-blocks/
+ */
+
+const Edit = function ({
+	attributes: { customMarkerColor, titol },
+	markerColor,
+	setMarkerColor,
+	setAttributes,
+	style,
+	clientId,
+}) {
+	// console.log(clientId);
+	// console.log(style);
+	const colorGradientSettings = useMultipleOriginColorsAndGradients();
+	console.log(markerColor);
+	const markerColorDropdown = (
+		<ColorGradientSettingsDropdown
+			settings={[
+				{
+					label: __("Marker", "devblog"),
+					colorValue: markerColor.color || customMarkerColor,
+					onColorChange: (value) => {
+						setMarkerColor(value);
+
+						setAttributes({
+							customMarkerColor: value,
+						});
+					},
+				},
+			]}
+			panelId={clientId}
+			hasColorsOrGradients={false}
+			disableCustomColors={false}
+			__experimentalIsRenderedInSidebar
+			{...colorGradientSettings}
+		/>
 	);
-}
+
+	return (
+		<>
+			<InspectorControls group="color">{markerColorDropdown}</InspectorControls>
+			<div {...useBlockProps()}>
+				<RichText
+					tagName="div"
+					value={titol}
+					onChange={(val) => setAttributes({ titol: val })}
+					placeholder={__("Heading...")}
+					allowedFormats={["core/bold", "core/italic"]}
+					style={{ color: markerColor.color }}
+				/>
+				<div>
+					<InnerBlocks />
+				</div>
+			</div>
+		</>
+	);
+};
+
+export default withColors({
+	markerColor: "marker-color",
+})(Edit);

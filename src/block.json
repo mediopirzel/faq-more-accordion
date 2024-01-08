@@ -8,12 +8,24 @@
 	"icon": "smiley",
 	"description": "Example block scaffolded with Create Block tool.",
 	"supports": {
-		"html": false
+		"html": false,
+		"color": {
+			"gradients": true
+		}
 	},
 	"attributes": {
 		"titol": {
+			"type": "string"
+		},
+		"colorName": {
 			"type": "string",
-			"default": "FAQ title"
+			"default": "base"
+		},
+		"markerColor": {
+			"type": "string"
+		},
+		"customMarkerColor": {
+			"type": "string"
 		}
 	},
 	"textdomain": "faq-more-accordion",
